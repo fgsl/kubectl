@@ -1,0 +1,22 @@
+{
+	"name" : "fgsl/kubectl",
+	"description" : "Kubectl Abstraction Layer",
+	"type" : "library",
+	"keywords" : [
+		"abstraction",
+		"fgsl",
+		"kubectl",
+		"layer"
+	],
+	"homepage" : "https://github.com/fgsl/kubectl",
+	"license" : "LGPL-3.0-only",
+	"autoload" : {
+		"psr-4" : {
+			"Fgsl\\Kubectl\\" : "src/Kubectl"
+		}
+	},
+	"require" : {
+		"php" : ">=7.2",
+		"ext-yaml" : "*"
+	}
+}
