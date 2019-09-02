@@ -7,34 +7,31 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
-class KubernetesNamespace extends AbstractKubernetesObject
+class KubernetesResourceQuota extends AbstractKubernetesObject
 {
-    private $status;
+    private $createdAt;
 
-    private $age;
-
-    public function __construct(string $namespace, string $status, string $age = null)
+    public function __construct(string $namespace, string $createdAt = null)
     {
         $this->namespace = $namespace;
-        $this->status = $status;
-        $this->age = $age;
+        $this->createdAt = $createdAt;
     }
 
     public function __toString()
     {
         if ($this->properties == []) {
-            return 'Namespace ' . $this->namespace . ' is ' . $this->status . ' and has ' . $this->age;
+            return 'Namespace ' . $this->namespace . ' was created at ' . $this->createdAt;
         }
         $response = $this->arrayToStringRecursive($this->properties);
         return $response;
     }
 
-    public function getAnnotations():string
+    public function getAnnotations(): string
     {
         return $this->getMetadata('annotations');
     }
 
-    public function getLabels():string
+    public function getLabels(): string
     {
         return $this->getMetadata('labels');
     }

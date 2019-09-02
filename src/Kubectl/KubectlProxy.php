@@ -36,5 +36,23 @@ class KubectlProxy
         $kubernetesNamespace = new KubernetesNamespace($namespace, $tokens[1], $tokens[2]);
         return $kubernetesNamespace;
     }
+    
+    public static function getResourceQuota(string $namespace, bool $object = false): KubernetesResourceQuota
+    {
+        $response = shell_exec('kubectl --namespace=' . $namespace .  ' get resourcequota ' . ($object ? $namespace . ' -o yaml' : ''));
+        if (is_null($response)) {
+            throw new KubectlException();
+        }
+        if ($object) {
+            $response = yaml_parse($response);
+            $kubernetesResourceQuota = new KubernetesResourceQuota($namespace);
+            $kubernetesResourceQuota->setProperties($response);
+            return $kubernetesResourceQuota;
+        }
+        $tokens = explode("\n", $response);
+        $tokens[1] = preg_replace('/\s+/', ';', $tokens[1]); // replace whitespaces with ;
+        $tokens = explode(";", $tokens[1]);
+        $kubernetesResourceQuota = new KubernetesResourceQuota($namespace, $tokens[1]);
+        return $kubernetesResourceQuota;
+    }    
 }
-
