@@ -25,14 +25,4 @@ class KubernetesResourceQuota extends AbstractKubernetesObject
         $response = $this->arrayToStringRecursive($this->properties);
         return $response;
     }
-
-    public function getAnnotations(): string
-    {
-        return $this->getMetadata('annotations');
-    }
-
-    public function getLabels(): string
-    {
-        return $this->getMetadata('labels');
-    }
 }

@@ -14,10 +14,6 @@ interface KubernetesObjectInterface
     public function getProperties(): array;
     
     public function setProperties(array $properties);
-
-    public function getAnnotations(): string;
-
-    public function getLabels(): string;
     
     public function __toString();
 }
