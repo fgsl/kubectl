@@ -6,14 +6,14 @@
  */
 namespace Fgsl\Test\Kubectl;
 
-use Fgsl\Kubectl\KubernetesResourceQuota;
+use Fgsl\Kubectl\KubernetesPods;
 use PHPUnit\Framework\TestCase;
 
-class KubernetesResourceQuotaTest extends TestCase
+class KubernetesPodsTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->instance = new KubernetesResourceQuota('namespace-test','created-at-test');
+        $this->instance = new KubernetesPods('namespace-test');
     }
     
     public function testCreateInstance()

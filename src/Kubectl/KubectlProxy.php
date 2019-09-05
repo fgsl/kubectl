@@ -54,5 +54,37 @@ class KubectlProxy
         $tokens = explode(";", $tokens[1]);
         $kubernetesResourceQuota = new KubernetesResourceQuota($namespace, $tokens[1]);
         return $kubernetesResourceQuota;
+    }
+    
+    public static function getPods(string $namespace, bool $object = false, bool $showLabels = false): KubernetesPods
+    {
+        $showLabels = $object ? false : $showLabels;
+        $response = shell_exec('kubectl --namespace=' . $namespace .  ' get pods ' . ($object ? '-o yaml' : '') . ($showLabels ? '--show-labels' : ''));
+        if (is_null($response)) {
+            throw new KubectlException();
+        }
+        if ($object) {
+            $response = yaml_parse($response);
+            $kubernetesPods = new KubernetesPods($namespace);
+            $kubernetesPods->setProperties($response);
+            return $kubernetesPods;
+        }
+        $pods = [];
+        $tokens = explode("\n", $response);
+        unset($tokens[0]);
+        foreach ($tokens as $token){
+            if (trim($token) == '') break;
+            $column = preg_replace('/\s+/', ';',$token); // replace whitespaces with ;
+            $fields = explode(';',$column);
+            $pods[$fields[0]]['ready'] = $fields[1]; 
+            $pods[$fields[0]]['status'] = $fields[2];
+            $pods[$fields[0]]['restarts'] = $fields[3];
+            $pods[$fields[0]]['age'] = $fields[4];
+            if ($showLabels){
+                $pods[$fields[0]]['labels'] = $fields[5];
+            }
+        }        
+        $kubernetesPods = new KubernetesPods($namespace, $pods);
+        return $kubernetesPods;
     }    
 }
