@@ -23,7 +23,7 @@ class KubernetesPods extends AbstractKubernetesObject
             $output = 'Namespace ' . $this->namespace . "\n";
             foreach($this->pods as $pod => $values){
                 $output .= "pod=$pod ready={$values['ready']} status={$values['status']} restarts={$values['restarts']} age={$values['age']}";
-                $output .= isset($values['labels']) ? " labels={$values['labels']}" : "\n"; 
+                $output .= isset($values['labels']) ? " labels={$values['labels']}\n" : "\n"; 
             }
             return $output;
         }
