@@ -9,7 +9,13 @@ namespace Fgsl\Kubectl;
 
 class KubernetesResourceQuota extends AbstractKubernetesObject
 {
+
     private $createdAt;
+
+    public static function getGetCommand(string $namespace, bool $object): string
+    {
+        return 'kubectl --namespace=' . $namespace . ' get resourcequota ' . ($object ? $namespace . ' -o yaml' : '');
+    }
 
     public function __construct(string $namespace, string $createdAt = null)
     {

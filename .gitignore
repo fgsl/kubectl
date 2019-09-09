@@ -4,3 +4,4 @@
 .phpunit.result.cache
 vendor/
 tmp.*/
+test/yamls/pod-nginx.yaml

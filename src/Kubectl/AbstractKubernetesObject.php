@@ -19,6 +19,11 @@ abstract class AbstractKubernetesObject implements KubernetesObjectInterface
     {
         return $this->properties[$name];
     }
+    
+    public function __get($name)
+    {
+        return $this->properties[$name];
+    }
 
     public function getProperties(): array
     {
