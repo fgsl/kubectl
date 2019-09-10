@@ -7,16 +7,29 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 class KubectlProxy
 {
+    /** @var string  */
     const KUBECTL_HEADER_HELP = 'kubectl controls the Kubernetes cluster manager';
 
-    public static function isInstalled()
+    /**
+     * @return boolean
+     */
+    public static function isInstalled(): bool
     {
         $response = shell_exec('kubectl');
         return (strpos($response, self::KUBECTL_HEADER_HELP) !== false);
     }
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return KubernetesNamespace
+     */
     public static function getNamespace(string $namespace, bool $object = false): KubernetesNamespace
     {
         $response = self::getResponse(KubernetesNamespace::getGetCommand($namespace, $object));
@@ -31,6 +44,11 @@ class KubectlProxy
         return $instance;
     }
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return KubernetesResourceQuota
+     */
     public static function getResourceQuota(string $namespace, bool $object = false): KubernetesResourceQuota
     {
         $response = self::getResponse(KubernetesResourceQuota::getGetCommand($namespace, $object));
@@ -45,6 +63,12 @@ class KubectlProxy
         return $instance;
     }
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @param bool $showLabels
+     * @return KubernetesPods
+     */
     public static function getPods(string $namespace, bool $object = false, bool $showLabels = false): KubernetesPods
     {
         $showLabels = $object ? false : $showLabels;
@@ -59,6 +83,11 @@ class KubectlProxy
         return $instance;
     }
     
+    /**
+     * @param string $module
+     * @param bool $object
+     * @return KubernetesVolumes
+     */
     public static function getVolumes(string $module, bool $object = false): KubernetesVolumes
     {
         $response = self::getResponse(KubernetesVolumes::getGetCommand($module, $object));
@@ -72,6 +101,11 @@ class KubectlProxy
         return $instance;
     }
     
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return KubernetesReplicaSets
+     */
     public static function getReplicaSets(string $namespace, bool $object = false): KubernetesReplicaSets
     {
         $response = self::getResponse(KubernetesReplicaSets::getGetCommand($namespace, $object));
@@ -85,6 +119,11 @@ class KubectlProxy
         return $instance;
     }    
 
+    /**
+     * @param string $command
+     * @throws KubectlException
+     * @return string
+     */
     protected static function getResponse(string $command): string
     {
         $response = shell_exec($command);
@@ -94,6 +133,13 @@ class KubectlProxy
         return $response;
     }
     
+    /**
+     * @param bool $object
+     * @param string $namespace
+     * @param string $response
+     * @param string $class
+     * @return NULL|object
+     */
     protected static function getObject(bool $object,string $namespace, string $response, string $class)
     {
         $instance = null;
@@ -105,6 +151,11 @@ class KubectlProxy
         return $instance;
     }
     
+    /**
+     * @param array $tokens
+     * @param bool $showLabels
+     * @return array
+     */
     protected static function getPodsFromTokens(array $tokens, bool $showLabels): array
     {
         unset($tokens[0]);
@@ -125,6 +176,10 @@ class KubectlProxy
         return $pods;
     }
     
+    /**
+     * @param array $tokens
+     * @return array
+     */
     protected static function getReplicaSetsFromTokens(array $tokens): array
     {
         unset($tokens[0]);

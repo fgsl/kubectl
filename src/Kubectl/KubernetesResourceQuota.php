@@ -7,22 +7,39 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 class KubernetesResourceQuota extends AbstractKubernetesObject
 {
-
+    /** @var string */
     private $createdAt;
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return string
+     */
     public static function getGetCommand(string $namespace, bool $object): string
     {
         return 'kubectl --namespace=' . $namespace . ' get resourcequota ' . ($object ? $namespace . ' -o yaml' : '');
     }
 
+    /**
+     * @param string $namespace
+     * @param string $createdAt
+     */
     public function __construct(string $namespace, string $createdAt = null)
     {
         $this->namespace = $namespace;
         $this->createdAt = $createdAt;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::__toString()
+     */
     public function __toString()
     {
         if ($this->properties == []) {

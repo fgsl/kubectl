@@ -7,34 +7,60 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 abstract class AbstractKubernetesObject implements KubernetesObjectInterface
 {
+    /** @var string  */
     const TAB = '    ';// 4 spaces
     
+    /** @var string */
     protected $namespace;
 
+    /** @var array */
     protected $properties = [];
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::getProperty()
+     */
     public function getProperty(string $name)
     {
         return $this->properties[$name];
     }
     
-    public function __get($name)
+    /**
+     * @param string $name
+     */
+    public function __get(string $name)
     {
         return $this->properties[$name];
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::getProperties()
+     */
     public function getProperties(): array
     {
         return $this->properties;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::setProperties()
+     */
     public function setProperties(array $properties)
     {
         $this->properties = $properties;
     }
-
+    
+    /**
+     * @param string $metadata
+     * @return string
+     */
     protected function getMetadata(string $metadata):string
     {
         if (isset($this->properties['metadata'][$metadata])) {
@@ -44,6 +70,12 @@ abstract class AbstractKubernetesObject implements KubernetesObjectInterface
         return "no $metadata found for this namespace";
     }
 
+    /**
+     * @param array $map
+     * @param bool $tab
+     * @param int $tabLevels
+     * @return string
+     */
     protected function arrayToStringRecursive(array $map, bool $tab = false, int $tabLevels = 0):string
     {
         $response = '';

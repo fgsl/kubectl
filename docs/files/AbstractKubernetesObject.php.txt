@@ -1,0 +1,91 @@
+<?php
+/**
+ * PHP Kubectl Abstraction Layer
+ * @author Flávio Gomes da Silva Lisboa <flavio.lisboa@fgsl.eti.br>
+ * @license https://www.gnu.org/licenses/lgpl-3.0.en.html
+ */
+declare(strict_types = 1);
+namespace Fgsl\Kubectl;
+
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
+abstract class AbstractKubernetesObject implements KubernetesObjectInterface
+{
+    const TAB = '    ';// 4 spaces
+    
+    /** @var string */
+    protected $namespace;
+
+    /** @var array */
+    protected $properties = [];
+
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::getProperty()
+     */
+    public function getProperty(string $name)
+    {
+        return $this->properties[$name];
+    }
+    
+    /**
+     * @param string $name
+     */
+    public function __get(string $name)
+    {
+        return $this->properties[$name];
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::getProperties()
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::setProperties()
+     */
+    public function setProperties(array $properties)
+    {
+        $this->properties = $properties;
+    }
+    
+    /**
+     * @param string $metadata
+     * @return string
+     */
+    protected function getMetadata(string $metadata):string
+    {
+        if (isset($this->properties['metadata'][$metadata])) {
+            $response = $this->arrayToStringRecursive($this->properties['metadata'][$metadata]);
+            return $response;
+        }
+        return "no $metadata found for this namespace";
+    }
+
+    /**
+     * @param array $map
+     * @param bool $tab
+     * @param int $tabLevels
+     * @return string
+     */
+    protected function arrayToStringRecursive(array $map, bool $tab = false, int $tabLevels = 0):string
+    {
+        $response = '';
+        foreach ($map as $name => $value) {
+            if (is_array($value)) {
+                $response .= str_repeat(self::TAB, $tabLevels) . "$name:\n";
+                $response .= $this->arrayToStringRecursive($value, true, $tabLevels + 1);
+            } else {
+                $response .= ($tab ? str_repeat(self::TAB, $tabLevels + 1) : '') . "$name: $value\n";
+            }
+        }
+        return $response;
+    }
+}

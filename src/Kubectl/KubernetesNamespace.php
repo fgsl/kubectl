@@ -7,18 +7,34 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 class KubernetesNamespace extends AbstractKubernetesObject
 {
 
+    /** @var string */
     private $status;
 
+    /** @var string */
     private $age;
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return string
+     */
     public static function getGetCommand(string $namespace, bool $object): string
     {
         return 'kubectl get namespace ' . $namespace . ($object ? ' -o yaml' : '');
     }
 
+    /**
+     * @param string $namespace
+     * @param string $status
+     * @param string $age
+     */
     public function __construct(string $namespace, string $status = null, string $age = null)
     {
         $this->namespace = $namespace;
@@ -35,17 +51,27 @@ class KubernetesNamespace extends AbstractKubernetesObject
         return $response;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\AbstractKubernetesObject::setProperties()
+     */
     public function setProperties(array $properties): void
     {
         $this->status = $properties['status']['phase'];
         parent::setProperties($properties);
     }
 
+    /**
+     * @return string
+     */
     public function getAnnotations(): string
     {
         return $this->getMetadata('annotations');
     }
 
+    /**
+     * @return string
+     */
     public function getLabels(): string
     {
         return $this->getMetadata('labels');

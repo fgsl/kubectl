@@ -1,0 +1,51 @@
+<?php
+/**
+ * PHP Kubectl Abstraction Layer
+ * @author Flávio Gomes da Silva Lisboa <flavio.lisboa@fgsl.eti.br>
+ * @license https://www.gnu.org/licenses/lgpl-3.0.en.html
+ */
+declare(strict_types = 1);
+namespace Fgsl\Kubectl;
+
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
+class KubernetesResourceQuota extends AbstractKubernetesObject
+{
+    /** @var string */
+    private $createdAt;
+
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return string
+     */
+    public static function getGetCommand(string $namespace, bool $object): string
+    {
+        return 'kubectl --namespace=' . $namespace . ' get resourcequota ' . ($object ? $namespace . ' -o yaml' : '');
+    }
+
+    /**
+     * @param string $namespace
+     * @param string $createdAt
+     */
+    public function __construct(string $namespace, string $createdAt = null)
+    {
+        $this->namespace = $namespace;
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::__toString()
+     */
+    public function __toString()
+    {
+        if ($this->properties == []) {
+            return 'Namespace ' . $this->namespace . ' was created at ' . $this->createdAt;
+        }
+        $response = $this->arrayToStringRecursive($this->properties);
+        return $response;
+    }
+}

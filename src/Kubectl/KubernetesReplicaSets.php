@@ -7,32 +7,59 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 class KubernetesReplicaSets extends AbstractKubernetesObject
 {
     /** @var array */
     private $replicaSets;
 
+    /**
+     * @param string $namespace
+     * @param bool $object
+     * @return string
+     */
     public static function getGetCommand(string $namespace, bool $object): string
     {
         return 'kubectl --namespace=' . $namespace . ' get rs ' . ($object ? ' -o yaml' : '');
     }
 
+    /**
+     * @param string $namespace
+     * @param string $module
+     * @return string
+     */
     public static function getDescribeCommand(string $namespace, string $module): string
     {
         return 'kubectl --namespace=' . $namespace . ' describe replicaset -l run=' . $module;
     }
     
+    /**
+     * @param string $namespace
+     * @param string $module
+     * @return string
+     */
     public static function describe(string $namespace, string $module): string
     {
         return shell_exec(self::getDescribeCommand($namespace, $module));
     }    
 
+    /**
+     * @param string $namespace
+     * @param array $replicaSets
+     */
     public function __construct(string $namespace, array $replicaSets = null)
     {
         $this->namespace = $namespace;
         $this->replicaSets = $replicaSets;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::__toString()
+     */
     public function __toString()
     {
         if ($this->properties == []) {

@@ -7,13 +7,29 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 interface KubernetesObjectInterface
 {
+    /**
+     * @param string $name
+     */
     public function getProperty(string $name);
     
+    /**
+     * @return array
+     */
     public function getProperties(): array;
     
+    /**
+     * @param array $properties
+     */
     public function setProperties(array $properties);
     
+    /**
+     * @return string
+     */
     public function __toString();
 }

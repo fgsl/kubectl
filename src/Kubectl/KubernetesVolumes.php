@@ -7,6 +7,10 @@
 declare(strict_types = 1);
 namespace Fgsl\Kubectl;
 
+/**
+ * @package Fgsl
+ * @subpackage Kubectl
+ */
 class KubernetesVolumes extends AbstractKubernetesObject
 {
 
@@ -16,17 +20,30 @@ class KubernetesVolumes extends AbstractKubernetesObject
     /** @var array */
     private $pods;
 
+    /**
+     * @param string $module
+     * @param bool $object
+     * @return string
+     */
     public static function getGetCommand(string $module, bool $object): string
     {
         return 'kubectl get pods -l run=' . $module . ($object ? ' -o yaml' : '');
     }
 
+    /**
+     * @param string $module
+     * @param array $pods
+     */
     public function __construct(string $module, array $pods = null)
     {
         $this->module = $module;
         $this->pods = $pods;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Fgsl\Kubectl\KubernetesObjectInterface::__toString()
+     */
     public function __toString()
     {
         if ($this->properties == []) {
